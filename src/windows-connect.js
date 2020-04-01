@@ -44,7 +44,8 @@ function connectToWifi(config, ap, callback) {
       ]);
     })
     .then(function() {
-      var cmd = 'cmd';
+      // var cmd = 'cmd';
+      var cmd = 'netsh';
       var params = [
         'wlan',
         'connect',
@@ -57,7 +58,16 @@ function connectToWifi(config, ap, callback) {
       return execCommand(cmd, params);
     })
     .then(function() {
-      return execCommand('del ".\\nodeWifiConnect.xml"');
+      // return execCommand('del ".\\nodeWifiConnect.xml"');
+      return new Promise(function(resolve, reject) {
+        fs.unlink('nodeWifiConnect.xml', function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve('');
+          }
+        });
+      });
     })
     .then(function() {
       callback && callback();
